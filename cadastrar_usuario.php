@@ -2,10 +2,9 @@
 
 require_once 'db_connection.php';
 
-$dbuser = 'admin';
-$dbsenha = 'admin';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
     $id = $_POST['id'];
     $senha = $_POST['senha'];
 
@@ -13,20 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $database = Database::getInstance();
         $pdo = $database->getPdo();
 
-        $stmt = $pdo->prepare("SELECT * FROM pessoas WHERE id = :id AND senha = :senha");
+        $stmt = $pdo->prepare("INSERT INTO pessoas (nome, email, id, senha) VALUES (:nome, :email, :id, :senha)");
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':senha', $senha);
         $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
-            echo "Login bem-sucedido!";
-        } else {
-            echo "ID ou senha incorretos.";
-        }
+        echo "Usuário cadastrado com sucesso!";
     } catch (PDOException $e) {
-        echo "Erro ao processar login: " . $e->getMessage();
+        echo "Erro ao cadastrar usuário: " . $e->getMessage();
     }
 }
 
@@ -36,23 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Cadastrar Usuário</title>
 </head>
 <body>
-    <h1>Faça seu login</h1>
+    <h1>Cadastre um novo usuário</h1>
     <form method="post" action="">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
         <label for="id">ID:</label>
         <input type="text" id="id" name="id"><br><br>
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha"><br><br>
-        <button type="submit">Entrar</button>
+        <button type="submit">Cadastrar</button>
     </form>
-
-    <?php if ($id === $dbuser && $senha === $dbsenha): ?>
-        <h2>Menu Admin</h2>
-        <ul>
-            <li><a href="cadastrar_usuario.php">Cadastrar Usuário</a></li>
-        </ul>
-    <?php endif; ?>
 </body>
 </html>

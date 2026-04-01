@@ -2,6 +2,9 @@
 
 require_once 'db_connection.php';
 
+$dbuser = 'admin';
+$dbsenha = 'admin';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $senha = $_POST['senha'];
