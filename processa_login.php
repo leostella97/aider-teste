@@ -6,24 +6,24 @@ $dbuser = 'admin';
 $dbsenha = 'admin';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
+    $user = $_POST['user']; // Alterado de id para user
     $senha = $_POST['senha'];
 
     try {
         $database = Database::getInstance();
         $pdo = $database->getPdo();
 
-        $stmt = $pdo->prepare("SELECT * FROM pessoas WHERE id = :id AND senha = :senha");
-        $stmt->bindParam(':id', $id);
+        $stmt = $pdo->prepare("SELECT * FROM pessoas WHERE user = :user AND senha = :senha");
+        $stmt->bindParam(':user', $user); // Alterado de id para user
         $stmt->bindParam(':senha', $senha);
         $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
+        if ($user_data) {
             echo "Login bem-sucedido!";
         } else {
-            echo "ID ou senha incorretos.";
+            echo "User ou senha incorretos.";
         }
     } catch (PDOException $e) {
         echo "Erro ao processar login: " . $e->getMessage();

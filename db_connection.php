@@ -20,6 +20,7 @@ class Database {
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nome VARCHAR(255) NOT NULL,
                     email VARCHAR(255) NOT NULL,
+                    user VARCHAR(255) NOT NULL UNIQUE, -- Alterado de id para user e adicionado UNIQUE
                     senha VARCHAR(255) NOT NULL
                 )
             ");

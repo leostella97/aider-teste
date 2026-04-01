@@ -3,36 +3,36 @@
 require_once 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
+    $user = $_POST['user']; // Alterado de id para user
     $senha = $_POST['senha'];
 
-    $admin_id = 'admin';
+    $admin_user = 'admin';
     $admin_senha = 'admin';
 
-    if ($id === $admin_id && $senha === $admin_senha) {
+    if ($user === $admin_user && $senha === $admin_senha) {
         echo "Login como Administrador bem-sucedido!";
         $is_admin = true;
     } else {
         try {
-        $database = Database::getInstance();
-        $pdo = $database->getPdo();
+            $database = Database::getInstance();
+            $pdo = $database->getPdo();
 
-        $stmt = $pdo->prepare("SELECT id, senha FROM pessoas WHERE id = :id");
-        $stmt->bindParam(':id', $id);
- 
-        $stmt->execute();
+            $stmt = $pdo->prepare("SELECT user, senha FROM pessoas WHERE user = :user");
+            $stmt->bindParam(':user', $user); // Alterado de id para user
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute();
 
-        if ($user && password_verify($senha, $user["senha"])) {
-            echo "Login bem-sucedido!";
-            // Definir uma sessão aqui, por exemplo: $_SESSION["user_id"] = $user["id"];
-            // E então redirecionar para uma página restrita, como o menu admin
-        } else {
-            echo "ID ou senha incorretos.";
-        }
-    } catch (PDOException $e) {
-        echo "Erro ao processar login: " . $e->getMessage();
+            $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user_data && password_verify($senha, $user_data["senha"])) {
+                echo "Login bem-sucedido!";
+                // Definir uma sessão aqui, por exemplo: $_SESSION["user_id"] = $user_data["id"];
+                // E então redirecionar para uma página restrita, como o menu admin
+            } else {
+                echo "User ou senha incorretos.";
+            }
+        } catch (PDOException $e) {
+            echo "Erro ao processar login: " . $e->getMessage();
         }
     }
 }
@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Faça seu login</h1>
     <form method="post" action="">
-        <label for="id">ID:</label>
-        <input type="text" id="id" name="id"><br><br>
+        <label for="user">User:</label> <!-- Alterado de ID para User -->
+        <input type="text" id="user" name="user"><br><br>
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha"><br><br>
         <button type="submit">Entrar</button>
