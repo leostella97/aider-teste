@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Entrar</button>
     </form>
 
-    <?php if ($id === $dbuser && $senha === $dbsenha): ?>
+    <?php if (isset($dbuser) && isset($dbsenha) && $id === $dbuser && $senha === $dbsenha): ?>
         <h2>Menu Admin</h2>
         <ul>
             <li><a href="cadastrar_usuario.php">Cadastrar Usuário</a></li>
