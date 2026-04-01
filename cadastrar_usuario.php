@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':senha', $senha);
+        $senha_hashed = password_hash($senha, PASSWORD_DEFAULT);
+        $stmt->bindParam(':senha', $senha_hashed);
         $stmt->execute();
 
         echo "Usuário cadastrado com sucesso!";
