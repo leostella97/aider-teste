@@ -40,7 +40,7 @@ try {
             <td><?php echo htmlspecialchars($user['id']); ?></td>
             <td><?php echo htmlspecialchars($user['nome']); ?></td>
             <td><?php echo htmlspecialchars($user['email']); ?></td>
-            <td><?php echo htmlspecialchars($user['user']); ?></td>
+            <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
             <!-- Adicione mais colunas conforme necessário -->
         </tr>
         <?php endforeach; ?>
