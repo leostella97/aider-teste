@@ -5,7 +5,7 @@ require_once 'db_connection.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = $_POST['user']; // Alterado de id para user
+    $user = $_POST['user'];
     $senha = $_POST['senha'];
 
     $admin_user = 'admin';
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo = $database->getPdo();
 
             $stmt = $pdo->prepare("SELECT user, senha FROM pessoas WHERE user = :user");
-            $stmt->bindParam(':user', $user); // Alterado de id para user
+            $stmt->bindParam(':user', $user);
 
             $stmt->execute();
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Faça seu login</h1>
     <form method="post" action="">
-        <label for="user">User:</label> <!-- Alterado de ID para User -->
+        <label for="user">User:</label>
         <input type="text" id="user" name="user"><br><br>
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha"><br><br>
