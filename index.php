@@ -2,6 +2,8 @@
 
 require_once 'db_connection.php';
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['user']; // Alterado de id para user
     $senha = $_POST['senha'];
@@ -11,7 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user === $admin_user && $senha === $admin_senha) {
         echo "Login como Administrador bem-sucedido!";
-        $is_admin = true;
+        $_SESSION['admin'] = true;
+        header("Location: index.php");
+        exit();
     } else {
         try {
             $database = Database::getInstance();
@@ -55,10 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Entrar</button>
     </form>
 
-    <?php if (isset($is_admin) && $is_admin): ?>
+    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
         <h2>Menu Admin</h2>
         <ul>
-            <li><a href="cadastrar_usuario.php">Cadastrar Usuário</a></li>
+            <li><a href="listar_usuarios.php">Listar Usuários</a></li>
         </ul>
     <?php endif; ?>
 </body>
