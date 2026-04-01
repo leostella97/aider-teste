@@ -28,21 +28,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Faça seu login</h1>
-    <form method="post" action="">
-        <label for="id">ID:</label>
-        <input type="text" id="id" name="id"><br><br>
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha"><br><br>
-        <button type="submit">Entrar</button>
-    </form>
-</body>
-</html>
