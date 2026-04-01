@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
         <h2>Menu Admin</h2>
         <ul>
+            <li><a href="cadastrar_usuario.php">Cadastrar Usuário</a></li>
             <li><a href="listar_usuarios.php">Listar Usuários</a></li>
         </ul>
     <?php endif; ?>
