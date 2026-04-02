@@ -1,6 +1,14 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
+    header("Location: index.php");
+    exit();
+}
 
 require_once 'db_connection.php';
+
+$success_message = "";
+$error_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
@@ -18,32 +26,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':pass', $senha_hashed);
         $stmt->execute();
 
-        echo "Usuário cadastrado com sucesso!";
+        $success_message = "Usuário cadastrado com sucesso!";
     } catch (PDOException $e) {
-        echo "Erro ao cadastrar usuário: " . $e->getMessage();
+        $error_message = "Erro ao cadastrar usuário: " . $e->getMessage();
     }
 }
 
+$pageTitle = "Cadastrar Usuário";
+include 'header_template.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastrar Usuário</title>
-</head>
-<body>
-    <h1>Cadastre um novo usuário</h1>
+<div class="box box-narrow">
+    <h1>Novo Usuário</h1>
+
+    <?php if ($success_message): ?>
+        <div class="alert alert-success"><?php echo $success_message; ?></div>
+    <?php endif; ?>
+    <?php if ($error_message): ?>
+        <div class="alert alert-error"><?php echo $error_message; ?></div>
+    <?php endif; ?>
+
     <form method="post" action="">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome"><br><br>
-        <label for="user">User:</label>
-        <input type="text" id="user" name="user"><br><br>
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha"><br><br>
+        <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" required placeholder="Ex: João Silva">
+        </div>
+        <div class="form-group">
+            <label for="user">Usuário</label>
+            <input type="text" id="user" name="user" required placeholder="Ex: joaosilva">
+        </div>
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required placeholder="Crie uma senha segura">
+        </div>
         <button type="submit">Cadastrar</button>
     </form>
-    <br>
-    <a href="index.php">Voltar ao Menu</a>
-</body>
-</html>
+
+    <div class="text-center mt-2">
+        <a href="index.php" class="btn-secondary">Voltar ao Menu</a>
+    </div>
+</div>
+
+<?php include 'footer_template.php'; ?>
