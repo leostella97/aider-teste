@@ -29,6 +29,7 @@ class Database {
             $auto_increment = ($driver == 'sqlite') ? 'AUTOINCREMENT' : 'AUTO_INCREMENT';
             $id_type = ($driver == 'sqlite') ? 'INTEGER' : 'INT';
 
+        try {
             // Cria a tabela 'dados' se ela não existir
             $this->pdo->exec("
                 CREATE TABLE IF NOT EXISTS dados (
