@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user_data) {
             echo "Login bem-sucedido!";
+            session_start();
+            $_SESSION['start'] = time(); // Iniciar o tempo da sessão
         } else {
             echo "User ou senha incorretos.";
         }

@@ -4,6 +4,18 @@ require_once 'db_connection.php';
 
 session_start();
 
+// Definir o tempo limite da sessão (10 minutos)
+$inactive = 600; // 10 minutos em segundos
+
+if (!isset($_SESSION['start']) || $_SESSION['start'] + $inactive < time()) {
+    session_unset();
+    echo "Sessão expirada. Por favor, faça login novamente.";
+    header("Location: index.php");
+    exit();
+}
+
+$_SESSION['start'] = time();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['user'];
     $senha = $_POST['senha'];
