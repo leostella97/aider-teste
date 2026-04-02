@@ -38,8 +38,8 @@ try {
         <?php foreach ($users as $user): ?>
         <tr>
             <td><?php echo htmlspecialchars($user['id']); ?></td>
-            <td><?php echo htmlspecialchars($user['nome']); ?></td>
-            <td><?php echo htmlspecialchars($user['email']); ?></td>
+            <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
+            <td><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : ''; ?></td>
             <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
             <!-- Adicione mais colunas conforme necessário -->
         </tr>
