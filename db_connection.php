@@ -28,16 +28,19 @@ class Database {
 
         $id_type = ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) == 'sqlite') ? 'INTEGER' : 'INT';
 
-        // Cria a tabela 'pessoas' se ela não existir com a sintaxe correta para o driver
-        $sql = "CREATE TABLE IF NOT EXISTS pessoas (
-                    id $id_type PRIMARY KEY $auto_increment,
+            // Cria a tabela 'dados' se ela não existir
+            $stmt = $this->pdo->prepare("
+                CREATE TABLE IF NOT EXISTS dados (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     nome VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) NOT NULL,
                     user VARCHAR(255) NOT NULL UNIQUE,
-                    senha VARCHAR(255) NOT NULL
-                )";
-
-        $this->pdo->exec($sql);
+                    pass VARCHAR(255) NOT NULL
+                )
+            ");
+            $stmt->execute();
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
     }
 
     public static function getInstance() {

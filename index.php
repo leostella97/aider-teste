@@ -8,12 +8,16 @@ session_start();
 $inactive = 600; // 10 minutos em segundos
 $message = "";
 
+// Apenas desloga se a sessão já estiver ativa e expirada
 if (isset($_SESSION['start']) && $_SESSION['start'] + $inactive < time()) {
     session_unset();
-    $message = "Sessão expirada. Por favor, faça login novamente.";
+    echo "Sessão expirada. Por favor, faça login novamente.";
 }
 
-$_SESSION['start'] = time();
+// Atualizar o tempo da sessão apenas se o usuário estiver logado
+if (isset($_SESSION['admin']) || isset($_SESSION['user'])) {
+    $_SESSION['start'] = time();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['user'];
@@ -24,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user === $admin_user && $senha === $admin_senha) {
         $_SESSION['admin'] = true;
+        $_SESSION['start'] = time();
         header("Location: index.php");
         exit();
     } else {
@@ -31,16 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $database = Database::getInstance();
             $pdo = $database->getPdo();
 
-            $stmt = $pdo->prepare("SELECT user, senha FROM pessoas WHERE user = :user");
+            $stmt = $pdo->prepare("SELECT user, pass FROM dados WHERE user = :user");
             $stmt->bindParam(':user', $user);
 
             $stmt->execute();
 
             $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user_data && password_verify($senha, $user_data["senha"])) {
-                $_SESSION["user"] = $user_data["user"];
-                $message = "Login bem-sucedido!";
+            if ($user_data && password_verify($senha, $user_data["pass"])) {
+                echo "Login bem-sucedido!";
+                $_SESSION['user'] = $user_data['user'];
+                $_SESSION['start'] = time();
+                header("Location: index.php");
+                exit();
             } else {
                 $message = "User ou senha incorretos.";
             }
@@ -54,53 +62,33 @@ $page_title = "Login - Sistema";
 include 'header.php';
 ?>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <?php if ($message): ?>
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <?php echo $message; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Home</title>
+</head>
+<body>
+    <?php if (!(isset($_SESSION['admin']) || isset($_SESSION['user']))): ?>
+        <h1>Faça seu login</h1>
+        <form method="post" action="">
+            <label for="user">User:</label>
+            <input type="text" id="user" name="user"><br><br>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha"><br><br>
+            <button type="submit">Entrar</button>
+        </form>
+    <?php else: ?>
+        <h1>Bem-vindo, <?php echo htmlspecialchars(isset($_SESSION['admin']) ? 'Administrador' : $_SESSION['user']); ?>!</h1>
+        <a href="logout.php">Sair</a>
 
-            <?php if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true): ?>
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4>Faça seu login</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="">
-                            <div class="mb-3">
-                                <label for="user" class="form-label">Usuário:</label>
-                                <input type="text" id="user" name="user" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="senha" class="form-label">Senha:</label>
-                                <input type="password" id="senha" name="senha" class="form-control" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Entrar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white text-center">
-                        <h4>Menu Admin</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group">
-                            <a href="cadastrar_usuario.php" class="list-group-item list-group-item-action">Cadastrar Usuário</a>
-                            <a href="listar_usuarios.php" class="list-group-item list-group-item-action">Listar Usuários</a>
-                            <a href="logout.php" class="list-group-item list-group-item-action list-group-item-danger">Sair</a>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
-<?php include 'footer.php'; ?>
+        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
+            <h2>Menu Admin</h2>
+            <ul>
+                <li><a href="cadastrar_usuario.php">Cadastrar Usuário</a></li>
+                <li><a href="listar_usuarios.php">Listar Usuários</a></li>
+            </ul>
+        <?php endif; ?>
+    <?php endif; ?>
+</body>
+</html>
