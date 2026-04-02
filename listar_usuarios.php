@@ -35,10 +35,10 @@ include 'header_template.php';
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th class="text-center">ID</th>
                     <th>Nome</th>
-                    <th>Usuário</th>
-                    <th>Ações</th>
+                    <th>E-mail</th>
+                    <th class="text-center">Usuário</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,13 +49,10 @@ include 'header_template.php';
                 <?php else: ?>
                     <?php foreach ($users as $user): ?>
                     <tr>
-                        <td style="font-weight: 600; color: var(--text-secondary);">#<?php echo htmlspecialchars($user['id']); ?></td>
+                        <td class="text-center" style="font-weight: 600; color: var(--text-secondary);">#<?php echo htmlspecialchars($user['id']); ?></td>
                         <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
-                        <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
-                        <td>
-                            <a href="editar_usuario.php?id=<?php echo $user['id']; ?>" class="btn-edit">Editar</a>
-                            <a href="excluir_usuario.php?id=<?php echo $user['id']; ?>" class="btn-delete" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
-                        </td>
+                        <td><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : ''; ?></td>
+                        <td class="text-center"><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
                     </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
