@@ -14,37 +14,46 @@ try {
     $stmt = $db->query('SELECT * FROM dados');
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    echo "Erro ao buscar usuários: " . $e->getMessage();
-    exit();
+    die("Erro ao buscar usuários: " . $e->getMessage());
 }
 
-$page_title = "Lista de Usuários - Sistema";
-include 'header.php';
+$pageTitle = "Lista de Usuários";
+include 'header_template.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Listar Usuários</title>
-</head>
-<body>
+<div class="box box-wide">
     <h1>Lista de Usuários</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>User</th>
-        </tr>
-        <?php foreach ($users as $user): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($user['id']); ?></td>
-            <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
-            <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-    <br>
-    <a href="index.php">Voltar ao Menu</a>
-</body>
-</html>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Usuário</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($users)): ?>
+                <tr>
+                    <td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 2rem;">Nenhum usuário cadastrado.</td>
+                </tr>
+                <?php else: ?>
+                    <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-secondary);">#<?php echo htmlspecialchars($user['id']); ?></td>
+                        <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
+                        <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-2">
+        <a href="index.php" class="btn-secondary">Voltar ao Menu</a>
+    </div>
+</div>
+
+<?php include 'footer_template.php'; ?>
