@@ -6,6 +6,16 @@ if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
 }
 
 require_once 'db_connection.php';
+session_start();
+
+// Proteção da página: só admins podem cadastrar
+if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
+    header("Location: index.php");
+    exit();
+}
+
+$message = "";
+$message_type = "";
 
 $success_message = "";
 $error_message = "";

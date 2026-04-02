@@ -6,6 +6,7 @@ session_start();
 
 // Definir o tempo limite da sessão (10 minutos)
 $inactive = 600; // 10 minutos em segundos
+$message = "";
 
 $error_message = "";
 
