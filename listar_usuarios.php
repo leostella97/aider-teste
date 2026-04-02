@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -11,7 +11,7 @@ require_once 'db_connection.php';
 $db = Database::getInstance()->getPdo();
 
 try {
-    $stmt = $db->query('SELECT * FROM pessoas');
+    $stmt = $db->query('SELECT * FROM dados');
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "Erro ao buscar usuários: " . $e->getMessage();
@@ -31,19 +31,17 @@ try {
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Email</th>
             <th>User</th>
-            <!-- Adicione mais colunas conforme necessário -->
         </tr>
         <?php foreach ($users as $user): ?>
         <tr>
             <td><?php echo htmlspecialchars($user['id']); ?></td>
             <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
-            <td><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : ''; ?></td>
             <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
-            <!-- Adicione mais colunas conforme necessário -->
         </tr>
         <?php endforeach; ?>
     </table>
+    <br>
+    <a href="index.php">Voltar ao Menu</a>
 </body>
 </html>

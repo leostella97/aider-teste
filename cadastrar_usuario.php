@@ -4,20 +4,18 @@ require_once 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $user = $_POST['user']; // Alterado de id para user
+    $user = $_POST['user'];
     $senha = $_POST['senha'];
 
     try {
         $database = Database::getInstance();
         $pdo = $database->getPdo();
 
-        $stmt = $pdo->prepare("INSERT INTO pessoas (nome, email, user, senha) VALUES (:nome, :email, :user, :senha)");
+        $stmt = $pdo->prepare("INSERT INTO dados (nome, user, pass) VALUES (:nome, :user, :pass)");
         $stmt->bindParam(':nome', $nome);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':user', $user); // Alterado de id para user
+        $stmt->bindParam(':user', $user);
         $senha_hashed = password_hash($senha, PASSWORD_DEFAULT);
-        $stmt->bindParam(':senha', $senha_hashed);
+        $stmt->bindParam(':pass', $senha_hashed);
         $stmt->execute();
 
         echo "Usuário cadastrado com sucesso!";
@@ -39,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post" action="">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome"><br><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
-        <label for="user">User:</label> <!-- Alterado de ID para User -->
+        <label for="user">User:</label>
         <input type="text" id="user" name="user"><br><br>
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha"><br><br>
         <button type="submit">Cadastrar</button>
     </form>
+    <br>
+    <a href="index.php">Voltar ao Menu</a>
 </body>
 </html>
