@@ -21,24 +21,30 @@ $success_message = "";
 $error_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = $_POST['nome'];
-    $user = $_POST['user'];
+    $nome = trim($_POST['nome']);
+    $email = trim($_POST['email']);
+    $user = trim($_POST['user']);
     $senha = $_POST['senha'];
 
-    try {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Por favor, insira um e-mail válido.";
+    } else {
+        try {
         $database = Database::getInstance();
         $pdo = $database->getPdo();
 
-        $stmt = $pdo->prepare("INSERT INTO dados (nome, user, pass) VALUES (:nome, :user, :pass)");
+        $stmt = $pdo->prepare("INSERT INTO dados (nome, email, user, pass) VALUES (:nome, :email, :user, :pass)");
         $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':user', $user);
         $senha_hashed = password_hash($senha, PASSWORD_DEFAULT);
         $stmt->bindParam(':pass', $senha_hashed);
         $stmt->execute();
 
-        $success_message = "Usuário cadastrado com sucesso!";
-    } catch (PDOException $e) {
-        $error_message = "Erro ao cadastrar usuário: " . $e->getMessage();
+            $success_message = "Usuário cadastrado com sucesso!";
+        } catch (PDOException $e) {
+            $error_message = "Erro ao cadastrar usuário: " . $e->getMessage();
+        }
     }
 }
 
@@ -60,6 +66,10 @@ include 'header_template.php';
         <div class="form-group">
             <label for="nome">Nome Completo</label>
             <input type="text" id="nome" name="nome" required placeholder="Ex: João Silva">
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required placeholder="Ex: joao@exemplo.com">
         </div>
         <div class="form-group">
             <label for="user">Usuário</label>

@@ -28,22 +28,24 @@ include 'header_template.php';
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th class="text-center">ID</th>
                     <th>Nome</th>
-                    <th>Usuário</th>
+                    <th>E-mail</th>
+                    <th class="text-center">Usuário</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
                 <tr>
-                    <td colspan="3" class="text-center" style="color: var(--text-secondary); padding: 2rem;">Nenhum usuário cadastrado.</td>
+                    <td colspan="4" class="text-center" style="color: var(--text-secondary); padding: 2rem;">Nenhum usuário cadastrado.</td>
                 </tr>
                 <?php else: ?>
                     <?php foreach ($users as $user): ?>
                     <tr>
-                        <td style="font-weight: 600; color: var(--text-secondary);">#<?php echo htmlspecialchars($user['id']); ?></td>
+                        <td class="text-center" style="font-weight: 600; color: var(--text-secondary);">#<?php echo htmlspecialchars($user['id']); ?></td>
                         <td><?php echo isset($user['nome']) ? htmlspecialchars($user['nome']) : ''; ?></td>
-                        <td><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
+                        <td><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : ''; ?></td>
+                        <td class="text-center"><?php echo isset($user['user']) ? htmlspecialchars($user['user']) : ''; ?></td>
                     </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
