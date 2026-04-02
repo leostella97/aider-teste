@@ -14,14 +14,13 @@ class Database {
             $this->pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Cria a tabela 'pessoas' se ela não existir
+            // Cria a tabela 'dados' se ela não existir
             $stmt = $this->pdo->prepare("
-                CREATE TABLE IF NOT EXISTS pessoas (
+                CREATE TABLE IF NOT EXISTS dados (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nome VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) NOT NULL,
-                    user VARCHAR(255) NOT NULL UNIQUE, -- Alterado de id para user e adicionado UNIQUE
-                    senha VARCHAR(255) NOT NULL
+                    user VARCHAR(255) NOT NULL UNIQUE,
+                    pass VARCHAR(255) NOT NULL
                 )
             ");
             $stmt->execute();
